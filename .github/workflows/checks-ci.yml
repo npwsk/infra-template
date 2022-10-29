@@ -1,5 +1,10 @@
 name: checks-ci
-on: [push]
+
+on:
+  push:
+    branches:
+      - '*'
+
 jobs:
   run-linter:
     runs-on: ubuntu-latest
