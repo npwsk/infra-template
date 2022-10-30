@@ -1,8 +1,13 @@
-# global variables from release-ci workflow
+# env variables from release-ci workflow
 
 echo "Release tag: $GITHUB_REF_NAME"
 echo "Release initiator: $GITHUB_ACTOR"
 echo "Release tags pattern: $TAG_PATTERN"
+
+# install dependencies
+
+echo 'Install dependencies'
+npm ci
 
 # prepare changelog
 
@@ -28,7 +33,7 @@ echo -e "Release changelog:\n$CHANGELOG"
 
 echo "Update release ticket"
 
-node ./update-release-ticket.js "$CHANGELOG" "$GITHUB_REF_NAME" "$GITHUB_ACTOR"
+node ./scripts/update-release-ticket.js "$CHANGELOG" "$GITHUB_REF_NAME" "$GITHUB_ACTOR"
 
 if [ "$?" != 0 ]; then
   echo "Failed to update release ticket"
@@ -56,7 +61,7 @@ echo "Docker image created at $DOCKER_IMAGE_PATH"
 
 echo "Add comment to release ticket"
 
-node ./add-ticket-comment.js "$CURRENT_TAG"
+node ./scripts/add-ticket-comment.js "$CURRENT_TAG"
 
 if [ "$?" != 0 ]; then
   echo "Failed to add comment"
@@ -65,6 +70,6 @@ fi
 
 echo "Release script finished"
 
-# export path to docker image for uploading artifact
+# export path to docker image as env variable
 
-export DOCKER_IMAGE_PATH
+echo "DOCKER_IMAGE_PATH=$DOCKER_IMAGE_PATH" >>$GITHUB_ENV

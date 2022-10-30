@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# install depenedencies
+# install dependencies
 
 echo 'Run npm ci'
 npm ci

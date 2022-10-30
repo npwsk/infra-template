@@ -28,6 +28,10 @@ jobs:
 
       - name: Run release.sh
         run: ./scripts/release.sh
+        env:
+          ISSUE_ID: ${{ secrets.ISSUE_ID }}
+          OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
+          ORG_ID: ${{ secrets.ORG_ID }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
