@@ -3,14 +3,23 @@ name: checks-ci
 on:
   push:
     branches:
-      - '*'
+      - '**'
+    tags-ignore:
+      - '**'
+  workflow_call:
 
 jobs:
-  run-linter:
+  run-checks:
+    name: checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 16.16.0
-      - run: ./scripts/checks.sh
+
+      - name: Run checks.sh
+        run: ./scripts/checks.sh

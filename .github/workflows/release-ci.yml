@@ -8,19 +8,29 @@ on:
     tags:
       - rc-0.0.*
 jobs:
+  run-checks:
+    uses: ./.github/workflows/checks-ci.yml
+
   build-release:
+    name: release
+    needs: [run-checks]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 16.16.0
 
-      - name: Run checks.sh
-        run: ./scripts/checks.sh
-
       - name: Run release.sh
         run: ./scripts/release.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-image
+          path: ${{ env.DOCKER_IMAGE_PATH }}

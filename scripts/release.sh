@@ -24,15 +24,47 @@ fi
 
 echo -e "Release changelog:\n$CHANGELOG"
 
-# fill release ticket
+# update release ticket
 
-node ./update-release-ticket.js $CHANGELOG $GITHUB_REF_NAME $GITHUB_ACTOR
+echo "Update release ticket"
+
+node ./update-release-ticket.js "$CHANGELOG" "$GITHUB_REF_NAME" "$GITHUB_ACTOR"
 
 if [ "$?" != 0 ]; then
-  echo "Failed to fill release ticket"
+  echo "Failed to update release ticket"
   exit 1
 fi
 
 # build docker image
 
+echo "Build Docker image"
+
+IMAGE_NAME="release-image"
+
+docker build -t "$IMAGE_NAME":"$CURRENT_TAG" .
+
+if [ "$?" != 0 ]; then
+  echo "Failed to build docker image"
+  exit 1
+fi
+
+DOCKER_IMAGE_PATH="./$IMAGE_NAME:$CURRENT_TAG"
+
+echo "Docker image created at $DOCKER_IMAGE_PATH"
+
+# add comment to release ticket
+
+echo "Add comment to release ticket"
+
+node ./add-ticket-comment.js "$CURRENT_TAG"
+
+if [ "$?" != 0 ]; then
+  echo "Failed to add comment"
+  exit 1
+fi
+
 echo "Release script finished"
+
+# export path to docker image for uploading artifact
+
+export DOCKER_IMAGE_PATH
