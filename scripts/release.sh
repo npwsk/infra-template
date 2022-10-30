@@ -33,7 +33,7 @@ echo -e "Release changelog:\n$CHANGELOG"
 
 echo "Update release ticket"
 
-node ./scripts/update-release-ticket.js "$CHANGELOG" "$GITHUB_REF_NAME" "$GITHUB_ACTOR"
+node ./scripts/helpers/update-release-ticket.js "$CHANGELOG" "$GITHUB_REF_NAME" "$GITHUB_ACTOR"
 
 if [ "$?" != 0 ]; then
   echo "Failed to update release ticket"
@@ -44,24 +44,22 @@ fi
 
 echo "Build Docker image"
 
-IMAGE_NAME="release-image"
+DOCKER_IMAGE_NAME="release-image:$CURRENT_TAG"
 
-docker build -t "$IMAGE_NAME":"$CURRENT_TAG" .
+docker build -t "$DOCKER_IMAGE_NAME" .
 
 if [ "$?" != 0 ]; then
   echo "Failed to build docker image"
   exit 1
 fi
 
-DOCKER_IMAGE_PATH="./$IMAGE_NAME:$CURRENT_TAG"
-
-echo "Docker image created at $DOCKER_IMAGE_PATH"
+echo "Created Docker image: $DOCKER_IMAGE_NAME"
 
 # add comment to release ticket
 
 echo "Add comment to release ticket"
 
-node ./scripts/add-ticket-comment.js "$CURRENT_TAG"
+node ./scripts/helpers/add-ticket-comment.js "$CURRENT_TAG"
 
 if [ "$?" != 0 ]; then
   echo "Failed to add comment"
@@ -70,6 +68,6 @@ fi
 
 echo "Release script finished"
 
-# export path to docker image as env variable
+# export docker image name as env variable
 
-echo "DOCKER_IMAGE_PATH=$DOCKER_IMAGE_PATH" >>$GITHUB_ENV
+echo "DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME" >>$GITHUB_ENV

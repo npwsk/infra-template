@@ -1,4 +1,4 @@
-const TrackerApiClient = require('./api/tracker-api-client');
+const TrackerApiClient = require('../api/tracker-api-client');
 
 const [changelog, releaseTag, author] = process.argv.slice(2);
 

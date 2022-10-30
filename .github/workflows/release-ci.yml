@@ -33,8 +33,7 @@ jobs:
           OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
           ORG_ID: ${{ secrets.ORG_ID }}
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload image as artifact
+        uses: ishworkh/docker-image-artifact-upload@v1
         with:
-          name: docker-image
-          path: ${{ env.DOCKER_IMAGE_PATH }}
+          image: ${{ env.DOCKER_IMAGE_NAME }}
