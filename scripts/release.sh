@@ -67,7 +67,3 @@ if [ "$?" != 0 ]; then
 fi
 
 echo "Release script finished"
-
-# export docker image name as env variable
-
-echo "DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME" >>$GITHUB_ENV

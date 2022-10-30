@@ -32,8 +32,3 @@ jobs:
           ISSUE_ID: ${{ secrets.ISSUE_ID }}
           OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
           ORG_ID: ${{ secrets.ORG_ID }}
-
-      - name: Upload image as artifact
-        uses: ishworkh/docker-image-artifact-upload@v1
-        with:
-          image: ${{ env.DOCKER_IMAGE_NAME }}
